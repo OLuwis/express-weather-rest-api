@@ -1,0 +1,17 @@
+{
+    "extends": "@tsconfig/node16/tsconfig.json",
+    "compilerOptions": {
+        "lib": ["ES6"],
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": true,
+        "strictPropertyInitialization": false,
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "@src/*": ["src/*"],
+            "@users/*": ["src/components/users/*"]
+        }
+    },
+    "include": ["src", "__tests__"]
+}
