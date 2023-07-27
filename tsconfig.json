@@ -5,10 +5,12 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "removeComments": true,
+        "strictPropertyInitialization": false,
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
-            "@src/*": ["src/*"]
+            "@src/*": ["src/*"],
+            "@users/*": ["src/components/users/*"]
         }
     },
     "include": ["src", "__tests__"]
