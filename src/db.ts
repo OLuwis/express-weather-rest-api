@@ -13,8 +13,4 @@ const AppDataSource = new DataSource({
     entities: [User]
 });
 
-AppDataSource.initialize()
-.then(() => console.log("Db Connected"))
-.catch((err) => console.log(err));
-
 export default AppDataSource;
