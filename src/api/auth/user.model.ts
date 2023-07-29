@@ -5,7 +5,7 @@ export class User {
     @PrimaryGeneratedColumn()
     user_id: number
 
-    @Column({ length: 50, type: "char" })
+    @Column({ length: 50, type: "char",  })
     username: string
 
     @Column({ length: 300, type: "char" })
