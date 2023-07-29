@@ -10,7 +10,7 @@
         "baseUrl": ".",
         "paths": {
             "@src/*": ["src/*"],
-            "@users/*": ["src/components/users/*"]
+            "@auth/*": ["src/components/auth/*"]
         }
     },
     "include": ["src", "__tests__"]
