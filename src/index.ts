@@ -1,5 +1,5 @@
 import { app, port } from "@src/app.js";
-import AppDataSource from "@src/db.js";
+import { AppDataSource } from "@src/db.js";
 
 // Please check if you setup all dotenv variables
 

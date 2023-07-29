@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { User } from "@users/users.model.js";
+import { User } from "@auth/user.model.js";
 
-const AppDataSource = new DataSource({
+export const AppDataSource = new DataSource({
     type: "postgres",
     host: "localhost",
     port: 5432,
@@ -13,4 +13,4 @@ const AppDataSource = new DataSource({
     entities: [User]
 });
 
-export default AppDataSource;
+export const userRepository = AppDataSource.getRepository(User);

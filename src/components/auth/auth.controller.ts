@@ -1,18 +1,16 @@
 import type { Request, Response } from "express";
-import UserService from "@users/users.service.js";
+import { AuthService } from "@auth/auth.service.js";
 
-const userService = new UserService();
-type signupData = { username: string, password: string };
+const authService = new AuthService();
+type bodyData = { username: string, password: string };
 
-class UserController {
+export class AuthController {
     signup(req: Request, res: Response) {
-        const { username, password }: signupData = req.body;
+        const { username, password }: bodyData = req.body;
         if (!username || !password) return res.status(400).send({ message: "Information Is Missing!" });
         if (password.length < 8) return res.status(400).send({ message: "Passwords Must Have At Least 8 Characters!" });
-        userService.signup(username, password)
+        return authService.signup(username, password)
         .then(msg => res.status(201).send({ message: msg }))
         .catch(err => res.status(409).send({ message: err }))
     }
 }
-
-export default UserController;

@@ -1,10 +1,7 @@
-import { User } from "@src/components/users/users.model.js";
-import AppDataSource from "@src/db.js";
+import { userRepository } from "@src/db.js";
 import bcrypt from "bcrypt";
 
-const userRepository = AppDataSource.getRepository(User);
-
-class UserService {
+export class AuthService {
     async signup(username: string, password: string) {
         const isRegistered = await userRepository.findOneBy({ username: username }).then(user => user ? true : false).catch(err => console.log(err));
         if (isRegistered) throw "Username Already Registered!";
@@ -17,5 +14,3 @@ class UserService {
         return `${username} Created!`;
     }
 }
-
-export default UserService;

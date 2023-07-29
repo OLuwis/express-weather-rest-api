@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity({ name: "Users", synchronize: true })
-class User {
+export class User {
     @PrimaryGeneratedColumn()
     user_id: number
 
@@ -11,5 +11,3 @@ class User {
     @Column({ length: 300, type: "char" })
     password: string
 }
-
-export { User };
