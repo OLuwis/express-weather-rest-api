@@ -1,13 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Index } from "typeorm";
 
-@Entity({ name: "Users", synchronize: true })
+@Entity({ name: "Users" })
 export class User {
     @PrimaryGeneratedColumn()
     user_id: number
 
-    @Column({ length: 50, type: "char",  })
+    @Column({ length: 50, type: "varchar" })
+    @Index()
     username: string
 
-    @Column({ length: 300, type: "char" })
+    @Column({ length: 100, type: "varchar" })
     password: string
 }
