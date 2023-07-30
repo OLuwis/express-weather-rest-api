@@ -1,16 +1,16 @@
-import "dotenv/config"
 import { app } from "@src/app.js";
 import { AuthService } from "@auth/auth.service.js";
 import { userRepository } from "@src/db.js";
 import { AppDataSource } from "@src/db.js";
 import request from "supertest";
-import jsonwebtoken, { Secret } from "jsonwebtoken";
+import jsonwebtoken from "jsonwebtoken";
+import { before } from "node:test";
 
 describe("POST /api/auth/signup", () => {
     beforeAll(async () => {
         await AppDataSource.initialize();
         const authService = new AuthService();
-        await authService.signup("repeatedUser", "testPassword");
+        await authService.signup({ username: "repeatedUser", password: "testPassword"});
     });
     
     afterAll(async () => {
@@ -60,7 +60,7 @@ describe("POST /api/auth/login", () => {
     beforeAll(async () => {
         await AppDataSource.initialize();
         const authService = new AuthService();
-        await authService.signup("testUser", "testPassword");
+        await authService.signup({ username: "testUser", password: "testPassword" });
     });
     
     afterAll(async () => {
@@ -68,6 +68,24 @@ describe("POST /api/auth/login", () => {
         await AppDataSource.destroy();
     });
 
+    describe("GIVEN only a username/password", () => {
+        it("should THEN send 400 status code and 'Information Is Missing!' message", async () => {
+            const bodyMock = { username: "testUser", password: "" };
+            const response = await request(app).post("/api/auth/signup").send(bodyMock);
+            expect(response.statusCode).toBe(400);
+            expect(response.body.message).toBe("Information Is Missing!");
+        });
+    });
+    
+    describe("GIVEN a small password", () => {
+        it("should THEN send 400 status code and 'Passwords Must Have At Least 8 Characters!' message", async () => {
+            const bodyMock = { username: "testUser", password: "test" };
+            const response = await request(app).post("/api/auth/signup").send(bodyMock);
+            expect(response.statusCode).toBe(400);
+            expect(response.body.message).toBe("Passwords Must Have At Least 8 Characters!");
+        });
+    });
+    
     describe("GIVEN a correct username and password", () => {
         it("should THEN send 200 status code and token on body", async () => {
             const bodyMock = { username: "testUser", password: "testPassword" };
