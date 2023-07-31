@@ -6,11 +6,13 @@
         "experimentalDecorators": true,
         "removeComments": true,
         "strictPropertyInitialization": false,
+        "useUnknownInCatchVariables": false,
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
             "@src/*": ["src/*"],
-            "@auth/*": ["src/api/auth/*"]
+            "@auth/*": ["src/api/auth/*"],
+            "@location/*": ["src/api/location/*"]
         }
     },
     "include": ["src", "__tests__"]
