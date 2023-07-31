@@ -5,6 +5,6 @@ import { AppDataSource } from "@src/db.js";
 
 await AppDataSource.initialize()
 .then(() => console.log("DB Connected"))
-.catch((err) => console.log(err));
+.catch((e) => console.log(e));
 
 app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
