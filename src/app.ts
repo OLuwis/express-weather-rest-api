@@ -1,12 +1,13 @@
 import "dotenv/config";
 import express from "express";
 import bodyParser from "body-parser";
-import userRouter from "@users/users.route.js";
+import { authRouter } from "@auth/auth.route.js";
+import { locationRouter } from "@location/location.route.js";
 
-const app = express();
-const port = process.env.PORT || 3000;
+export const app = express();
+export const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
-app.use(userRouter);
-
-export { app, port };
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(authRouter);
+app.use(locationRouter);
