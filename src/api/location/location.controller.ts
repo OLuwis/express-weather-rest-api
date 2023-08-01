@@ -1,7 +1,7 @@
 import { LocationService } from "@src/api/location/location.service.js";
 import { Request, Response } from "express";
 
-const { searchLocations, saveLocation, getLocations, deleteLocation } = new LocationService();
+const { searchLocations, saveLocation, getLocations, deleteLocation, getWeather, getForecast } = new LocationService();
 
 export class LocationController {
     async searchLocations(req: Request, res: Response) {
@@ -38,5 +38,25 @@ export class LocationController {
         } catch (e) {
             return res.status(e.code).send({ message: e.message });
         };
+    };
+
+    async getWeather(req: Request, res: Response) {
+        try {
+            const { code, resource } = await getWeather(<string>req.query.lat, <string>req.query.lon);
+            return res.status(code).send(resource);
+        } catch (e) {
+            console.log(e);
+            return res.status(e.code).send({ message: e.message })
+        }
+    };
+
+    async getForecast(req: Request, res: Response) {
+        try {
+            const { code, resource } = await getForecast(<string>req.query.lat, <string>req.query.lon);
+            return res.status(code).send(resource);
+        } catch (e) {
+            console.log(e);
+            return res.status(e.code).send({ message: e.message })
+        }
     };
 };
