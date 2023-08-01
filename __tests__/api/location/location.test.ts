@@ -10,8 +10,8 @@ describe("GET /api/locations/search?q=", () => {
             const { statusCode, body } = await request(app).get("/api/locations/search?q=Salvador");
             expect(statusCode).toBe(200);
             for (let i = 0; i < body - 1; i++) {
-                expect(body[i].data).toHaveProperty("city");
-                expect(body[i].data).toHaveProperty("state");
+                expect(body.data).toHaveProperty("city");
+                expect(body.data).toHaveProperty("state");
                 expect(body[i].data).toHaveProperty("country");
                 expect(body[i].data).toHaveProperty("lat");
                 expect(body[i].data).toHaveProperty("lon");
@@ -148,34 +148,67 @@ describe("DELETE /api/locations/:id", () => {
 });
 
 describe("GET /api/locations/weather?lat=&lon=", () => {
-    beforeAll(async () => {
-        await AppDataSource.initialize();
-    });
-
-    afterAll(async () => {
-        await AppDataSource.destroy();
-    });
-    
     describe("GIVEN a latitude and longitude", () => {
         it("should THEN return a status code 200 and an object with weather data", async () => {
-            const response = await request(app).get("/api/locations/weather?lat=-12.98&-38.48");
+            const { statusCode, body } = await request(app).get("/api/locations/weather?lat=-12.98&lon=-38.48");
+            expect(statusCode).toBe(200);
+            expect(body).toHaveProperty("city");
+            expect(body).toHaveProperty("country");
 
+            expect(body).toHaveProperty("weather");
+            expect(body.weather).toHaveProperty("main");
+            expect(body.weather).toHaveProperty("description");
+            expect(body).toHaveProperty("temp");
+            expect(body.temp).toHaveProperty("main");
+            expect(body.temp).toHaveProperty("min");
+            expect(body.temp).toHaveProperty("max");
+            expect(body.temp).toHaveProperty("feels_like");
+            expect(body.temp).toHaveProperty("pressure");
+            expect(body.temp).toHaveProperty("humidity");
+            expect(body).toHaveProperty("visibility");
+            expect(body).toHaveProperty("wind");
+            expect(body.wind).toHaveProperty("speed");
+            expect(body.wind).toHaveProperty("deg");
+            expect(body).toHaveProperty("clouds");
+            expect(body.clouds).toHaveProperty("all");
+            expect(body).toHaveProperty("time");
+            expect(body.time).toHaveProperty("date");
+            expect(body.time).toHaveProperty("sunrise");
+            expect(body.time).toHaveProperty("sunset");
+            expect(body.time).toHaveProperty("timezone");
         });
     });
 });
 
 describe("GET /api/locations/forecast?lat=&lon=", () => {
-    beforeAll(async () => {
-        await AppDataSource.initialize();
-    });
-
-    afterAll(async () => {
-        await AppDataSource.destroy();
-    });
-    
     describe("GIVEN a latitude and longitude", () => {
         it("should THEN return a status code 200 and an array of object with weather data", async () => {
-
+            const { statusCode, body } = await request(app).get("/api/locations/forecast?lat=-12.98&lon=-38.48");
+            expect(statusCode).toBe(200);
+            expect(body).toHaveProperty("city");
+            expect(body).toHaveProperty("country");
+            expect(body).toHaveProperty("forecast");
+            for (let i = 0; i < body.forecast.length - 1; i++) {
+                expect(body.forecast[i]).toHaveProperty("weather");
+                expect(body.forecast[i]).toHaveProperty("temp");
+                expect(body.forecast[i].temp).toHaveProperty("main");
+                expect(body.forecast[i].temp).toHaveProperty("min");
+                expect(body.forecast[i].temp).toHaveProperty("max");
+                expect(body.forecast[i].temp).toHaveProperty("feels_like");
+                expect(body.forecast[i].temp).toHaveProperty("pressure");
+                expect(body.forecast[i].temp).toHaveProperty("humidity");
+                expect(body.forecast[i]).toHaveProperty("visibility");
+                expect(body.forecast[i]).toHaveProperty("wind");
+                expect(body.forecast[i].wind).toHaveProperty("speed");
+                expect(body.forecast[i].wind).toHaveProperty("deg");
+                expect(body.forecast[i]).toHaveProperty("clouds");
+                expect(body.forecast[i].clouds).toHaveProperty("all");
+                expect(body.forecast[i]).toHaveProperty("date");
+                expect(body).toHaveProperty("time");
+                expect(body.time).toHaveProperty("sunrise");
+                expect(body.time).toHaveProperty("sunset");
+                expect(body.time).toHaveProperty("timezone");
+            };
         });
     });
 });
