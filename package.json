@@ -1,5 +1,5 @@
 {
-  "name": "weatherapp-node",
+  "name": "weatherapi-node",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -46,10 +46,10 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OLuwis/WeatherApp-Node.git"
+    "url": "git+https://github.com/OLuwis/WeatherAPI-Node.git"
   },
   "bugs": {
-    "url": "https://github.com/OLuwis/WeatherApp-Node/issues"
+    "url": "https://github.com/OLuwis/WeatherAPI-Node/issues"
   },
-  "homepage": "https://github.com/OLuwis/WeatherApp-Node#readme"
+  "homepage": "https://github.com/OLuwis/WeatherAPI-Node#readme"
 }
