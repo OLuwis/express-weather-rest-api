@@ -38,3 +38,11 @@ Esta API possui um sistema de cadastro e login, e também possui um sistema de C
     ```
 
 ### Documentação
+
+1. __Clone este repositório__
+    ```
+    git clone https://github.com/OLuwis/TodoAPI-Node.git
+    ```
+2. __Depois vá em [Swagger Editor](https://editor.swagger.io)__
+3. __Clique em "File" > "Import File"__
+4. __Por fim selecione o arquivo "documentation.yaml"__
