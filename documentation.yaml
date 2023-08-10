@@ -1,0 +1,495 @@
+openapi: 3.0.3
+info:
+  title: WeatherAPI Documentation
+  description: |-
+    Documentação da WeatherAPI
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: Auth
+    description: Operações de autenticação do usuário
+  - name: Locations
+    description: Operações de gerenciamento da localidades
+paths:
+  /api/auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: Registrar o usuário
+      operationId: authSignup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Auth"
+        required: true
+      responses:
+        201:
+          description: "Username created!"
+        409:
+          description: "Username Already Registered!"
+  /api/auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Logar um usuário
+      operationId: authLogin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Auth"
+        required: true
+      responses:
+        200:
+          description: "JWT Token"
+        401:
+          description: "Username Not Found! || Wrong Password!"
+  /api/locations/search:
+    get:
+      parameters:
+        - in: query
+          name: q
+          schema: 
+            type: string
+            example: "Salvador"
+          required: true
+          description: Nome da cidade para pesquisar
+      tags:
+        - Locations
+      summary: Pesquisar uma geolocalização de uma cidade
+      operationId: searchLocations
+      responses:
+        200:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                type: array
+                items:
+                  $ref: "#/components/schemas/Locations"
+        400:
+          description: "No Search Terms Found!"
+  /api/locations:
+    get:
+      tags:
+        - Locations
+      summary: Pesquisar geolocalizações de um usuário
+      operationId: userLocations
+      security: 
+        - bearerAuth: []
+      responses:
+        200: 
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: "#/components/schemas/UserLocations"
+        401:
+          description: "Not Authorized!"
+    post:
+      tags:
+        - Locations
+      summary: Salvar uma geolocalização
+      operationId: saveLocation
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Location"
+        required: true
+      responses:
+        201:
+          description: "Location Saved!"
+        401:
+          description: "Not Authorized!"
+  /api/locations/{id}:
+    delete:
+      tags: 
+        - Locations
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: "ID da localização"
+      summary: Deletar uma geolocalização de um usuário
+      operationId: deleteLocation
+      security: 
+        - bearerAuth: []
+      responses: 
+        401: 
+          description: "Not Authorized!"
+        404: 
+          description: "Not Found! || Location Deleted!"
+  /api/locations/weather:
+    get:
+      parameters:
+        - in: query
+          name: lat
+          schema: 
+            type: number
+            format: float
+            example: -12.88
+          required: true
+          description: "Latitude"
+        - in: query
+          name: lon
+          schema:
+            type: number
+            format: float
+            example: -12.88
+          required: true
+          description: "Longitude"
+      tags: 
+        - Locations
+      summary: Consultar o tempo de uma geolocalização
+      operationId: getWeather
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/LocationWeather"
+        500:
+          description: "Unable To Get Weather!"
+  /api/locations/forecast:
+    get:
+      parameters:
+        - in: query
+          name: lat
+          schema: 
+            type: number
+            format: float
+            example: -12.88
+          required: true
+          description: "Latitude"
+        - in: query
+          name: lon
+          schema:
+            type: number
+            format: float
+            example: -12.88
+          required: true
+          description: "Longitude"
+      tags: 
+        - Locations
+      summary: Consultar a previsão do tempo de uma geolocalização
+      operationId: getForecast
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/LocationForecast"
+        500:
+          description: "Unable To Get Weather!"
+components:
+  schemas:
+    Auth: 
+      type: object
+      properties:
+        username:
+          type: string
+          example: "Luis"
+        password:
+          type: string
+          minLength: 8
+          format: password
+          example: 26092002
+    Locations: 
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/Location"
+        ref: 
+          type: object
+          properties:
+            weather:
+              type: object
+              properties:
+                method: 
+                  type: string
+                  example: "GET"
+                url:
+                  type: string
+                  example: "/api/locations/weather?lat=-12.88&lon=-12.88"
+            forecast:
+                type: object
+                properties:
+                  method: 
+                    type: string
+                    example: "GET"
+                  url:
+                    type: string
+                    example: "/api/locations/forecast?lat=-12.88&lon=-12.88"
+            save:
+              type: object
+              properties:
+                header:
+                  type: string
+                  example: "Authorization Bearer jwt-token"
+                method: 
+                  type: string
+                  example: "POST"
+                url:
+                  type: string
+                  example: "/api/locations"
+                body:
+                  $ref: "#/components/schemas/Location"
+    Location: 
+      type: object
+      properties: 
+        city:
+          type: string
+          example: "Salvador"
+        state: 
+          type: string
+          example: "Bahia"
+        country: 
+          type: string
+          example: "BR"
+        lat: 
+          type: number
+          format: float
+          example: -12.88
+        lon: 
+          type: number
+          format: float
+          example: -12.88
+    UserLocations: 
+      type: object
+      properties:
+        data:
+          allOf:
+            - type: object
+              properties:
+                location_id:
+                  type: integer
+                  example: 1
+            - $ref: "#/components/schemas/Location"
+        ref:
+          type: object
+          properties:
+            weather:
+              type: object
+              properties:
+                method:
+                  type: string
+                  example: "GET"
+                url:
+                  type: string
+                  example: "/api/locations/weather?lat=-12.88&lon=-12.88"
+            forecast:
+              type: object
+              properties:
+                method:
+                  type: string
+                  example: "GET"
+                url:
+                  type: string
+                  example: "/api/locations/forecast?lat=-12.88&lon=-12.88"
+            delete:
+              type: object
+              properties:
+                header:
+                  type: string
+                  example: "Authorization Bearer jwt-token"
+                method:
+                  type: string
+                  example: "DELETE"
+                url:
+                  type: string
+                  example: "/api/locations/1"
+    LocationWeather:
+      type: object
+      properties:
+        city:
+          type: string
+          example: "Salvador"
+        country:
+          type: string
+          example: "BR"
+        weather:
+          type: object
+          properties:
+            main:
+              type: string
+              example: "Rain"
+            description:
+              type: string
+              example: "modarate rain"
+        temp:
+          type: object
+          properties:
+            main:
+              type: number
+              format: float
+              example: 28.00
+            min:
+              type: number
+              format: float
+              example: 28.00
+            max:
+              type: number
+              format: float
+              example: 28.00
+            feels_like:
+              type: number
+              format: float
+              example: 28.00
+            pressure:
+              type: number
+              format: float
+              example: 28.00
+            humidity:
+              type: number
+              format: float
+              example: 28.00
+            grnd_level:
+              type: number
+              format: float
+              example: 28.00
+        visibility:
+          type: integer
+          example: 10000
+        wind:
+          type: object
+          properties:
+            speed:
+              type: number
+              format: float
+              example: 1.00
+            deg:
+              type: integer
+              example: 90
+            gust:
+              type: number
+              format: float
+              example: 1.00
+        clouds:
+          type: object
+          properties:
+            all:
+              type: integer
+              example: 100
+        time:
+          type: object
+          properties:
+            date:
+              type: integer
+              example: 1661870592
+            sunrise:
+              type: integer
+              example: 1661870592
+            sunset:
+              type: integer
+              example: 1661870592
+            timezone: 
+              type: integer
+              example: 7200
+    LocationForecast:
+      type: object
+      properties:
+        city:
+          type: string
+          example: "Salvador"
+        country: 
+          type: string
+          example: "BR"
+        time:
+          type: object
+          properties:
+            sunrise: 
+              type: integer
+              example: 1661870592
+            sunset:
+              type: integer
+              example: 1661870592
+            timezone:
+              type: integer
+              example: 1661870592
+        forecast:
+          type: array
+          items:
+            properties:
+              date:
+                type: integer
+                example: 1661870592
+              weather:
+                type: object
+                properties:
+                  main:
+                    type: string
+                    example: "Rain"
+                  description: 
+                    type: string
+                    example: "moderate rain"
+              temp:
+                type: object
+                properties:
+                  main:
+                    type: number
+                    format: float
+                    example: 28.00
+                  min:
+                    type: number
+                    format: float
+                    example: 28.00
+                  max:
+                    type: number
+                    format: float
+                    example: 28.00
+                  feels_like:
+                    type: number
+                    format: float
+                    example: 28.00
+                  pressure:
+                    type: number
+                    format: float
+                    example: 28.00
+                  humidity:
+                    type: number
+                    format: float
+                    example: 28.00
+                  grnd_level:
+                    type: number
+                    format: float
+                    example: 28.00
+              visibility:
+                type: integer
+                example: 10000
+              wind:
+                type: object
+                properties:
+                  speed:
+                    type: number
+                    format: float
+                    example: 1.00
+                  deg:
+                    type: integer
+                    example: 90
+                  gust: 
+                    type: number
+                    format: float
+                    example: 1.00
+              clouds:
+                type: object
+                properties:
+                  all:
+                    type: integer
+                    example: 100
+  securitySchemes: 
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
